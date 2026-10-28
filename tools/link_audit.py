@@ -32,7 +32,7 @@ SEARCHtargets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: vn.gta.link.audit
-'''.replace('HEADERPATH',str(root/'app/Source')).replace('SEARCH',search)
+'''.replace('HEADERPATH',str(root/'app/Source')).replace('SEARCHtargets:',search+'targets:')
  (out/'project.yml').write_text(spec)
  subprocess.run(['xcodegen','generate','--spec','project.yml'],cwd=out,check=True)
  p=subprocess.run(['xcodebuild','-project','LinkAudit.xcodeproj','-scheme','LinkAudit','-configuration','Release','-sdk','iphoneos','-derivedDataPath',str(out/name),'CODE_SIGNING_ALLOWED=NO','build'],cwd=out,text=True,capture_output=True)
