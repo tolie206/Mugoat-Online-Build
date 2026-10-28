@@ -23,13 +23,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: tolie206/Regeneration
-          ref: b512e8038bf1c2a2b6852cd10bcc6266fbcdfd90
+          ref: afa13ea8e6b2cb491f439ecfb90167afa3e9a08e
           token: ${{ secrets.PRIVATE_SOURCE_TOKEN }}
           persist-credentials: false
           fetch-depth: 0
       - name: Verify pinned source and typecheck complete iOS UI
         run: |
-          test "$(git rev-parse HEAD)" = b512e8038bf1c2a2b6852cd10bcc6266fbcdfd90
+          test "$(git rev-parse HEAD)" = afa13ea8e6b2cb491f439ecfb90167afa3e9a08e
           python3 tools/preflight_online_swift.py --swift-only
       - name: Verify original-release toolchain
         run: |
