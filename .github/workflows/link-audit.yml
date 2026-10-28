@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: tolie206/Regeneration
-          ref: afa13ea8e6b2cb491f439ecfb90167afa3e9a08e
+          ref: a7df67c920130d987655138cc631562b3b2306f3
           token: ${{ secrets.PRIVATE_SOURCE_TOKEN }}
           persist-credentials: false
           path: source
@@ -28,4 +28,7 @@ jobs:
       - name: Install project generator
         run: brew install xcodegen
       - name: Probe real iOS link using minimal native host
-        run: python3 driver/tools/link_audit.py source "$RUNNER_TEMP/link-audit"
+        run: |
+          mkdir -p source/app/Build/Online
+          cp source/network/native-port/online-bridge/target/aarch64-apple-ios/release/libmugoat_online.a source/app/Build/Online/
+          python3 source/tools/preflight_online_link.py
