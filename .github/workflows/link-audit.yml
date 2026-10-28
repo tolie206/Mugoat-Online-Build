@@ -1,0 +1,31 @@
+name: Diagnose native iOS link
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: macos-15
+    timeout-minutes: 15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: driver
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: tolie206/Regeneration
+          ref: afa13ea8e6b2cb491f439ecfb90167afa3e9a08e
+          token: ${{ secrets.PRIVATE_SOURCE_TOKEN }}
+          persist-credentials: false
+          path: source
+      - name: Build iOS Rust library and report required native dependencies
+        run: |
+          rustup target add aarch64-apple-ios
+          IPHONEOS_DEPLOYMENT_TARGET=16.0 cargo rustc --manifest-path source/network/native-port/online-bridge/Cargo.toml --release --lib --target aarch64-apple-ios -- --print native-static-libs
+      - name: Install project generator
+        run: brew install xcodegen
+      - name: Probe real iOS link using minimal native host
+        run: python3 driver/tools/link_audit.py source "$RUNNER_TEMP/link-audit"
