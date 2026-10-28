@@ -1,0 +1,18 @@
+name: Check public iOS runner
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: macos-15
+    timeout-minutes: 5
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - name: Confirm Apple Silicon and pinned iPhoneOS toolchain
+        run: |
+          test "$(uname -m)" = arm64
+          xcodebuild -version
+          test "$(xcrun --sdk iphoneos --show-sdk-version)" = '26.2'
+          echo 'Public Apple Silicon runner starts successfully without private build inputs.'
